@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Admini Freelancer App",
+    "slug": "admini-app-freelancer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#0056b3",
+      "image": "./assets/icons/auth/logo.svg",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.admini.freelancerapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#0056b3"
+      },
+      "package": "com.admini.freelancerapp",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_EXTERNAL_STORAGE",
+        "RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/logo.png",
+      "name": "Admini Freelancer App",
+      "shortName": "Admini Freelancer",
+      "lang": "en",
+      "scope": "/",
+      "themeColor": "#0056b3",
+      "backgroundColor": "#F5F5F5"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-audio",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Allow this app to access your camera.",
+          "photosPermission": "Allow this app to access your photos."
+        }
+      ]
+    ],
+    "scheme": "admini-freelancer"
+  }
+}
+
