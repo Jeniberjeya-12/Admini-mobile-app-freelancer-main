@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Image, Alert,} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
+// import * as ImagePicker from "expo-image-picker";
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -45,53 +45,24 @@ export default function SettingsScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={22} color="#2563eb" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={styles.headerTitle}>Profile</Text>
       </View>
-
-      {/* 🔹 Tabs */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.tabsContainer}>
-          {tabs.map((tab) => (
-            <TouchableOpacity
-              key={tab}
-              style={[styles.tab, activeTab === tab && styles.activeTab]}
-              onPress={() => setActiveTab(tab)}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  activeTab === tab && styles.activeTabText,
-                ]}
-              >
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-
+      
       {/* 🔹 Profile Picture */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Profile Picture</Text>
-
-        <View style={styles.profileRow}>
-          <View style={styles.avatar}>
+      <View style={styles.profileHeaderContainer}>
+        <View style={styles.avatarWrapper}>
+          <View style={styles.avatarMain}>
             {profileImage ? (
               <Image source={{ uri: profileImage }} style={styles.avatarImg} />
             ) : (
-              <Ionicons name="person" size={50} color="#9ca3af" />
+              <Ionicons name="person" size={60} color="#9ca3af" />
             )}
           </View>
-
-          <View style={styles.profileButtons}>
-            <TouchableOpacity style={styles.primaryBtn} onPress={pickImage}>
-              <Text style={styles.primaryBtnText}>Change Picture</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.outlineBtn} onPress={removeImage}>
-              <Text style={styles.outlineBtnText}>Remove Picture</Text>
-            </TouchableOpacity>
-          </View>
+          
+          {/* Floating Edit Icon */}
+          <TouchableOpacity style={styles.editIconBadge} onPress={pickImage}>
+            <Ionicons name="create-outline" size={20} color="#2563eb" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -155,7 +126,7 @@ const Input = ({ label, multiline = false, ...props }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#ffffffff",
     padding: 16,
   },
 
@@ -195,9 +166,17 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 20,
+    // Subtle shadow for the card
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    borderWidth: 1,
+    borderColor: "#f1f5f9",
   },
 
   sectionTitle: {
@@ -205,42 +184,76 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 12,
   },
-
-  profileRow: {
-    flexDirection: "row",
+  profileHeaderContainer: {
     alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 20,
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#f1f5f9",
+  avatarWrapper: {
+    position: "relative", 
+  },
+  avatarMain: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
+    borderWidth: 3,
+    borderColor: "#fff",
+    // Shadow for elevation effect
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
   },
   avatarImg: {
     width: "100%",
     height: "100%",
   },
-
-  profileButtons: {
-    marginLeft: 16,
-  },
-
-  label: {
-    fontSize: 13,
-    marginBottom: 6,
-    color: "#374151",
-  },
-  input: {
-    backgroundColor: "#f9fafb",
+  editIconBadge: {
+    position: "absolute",
+    right: 0,
+    top: 5,
+    backgroundColor: "#fff",
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
     borderWidth: 1,
     borderColor: "#e5e7eb",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+  },
+  label: {
     fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 8,
+    color: "#1e293b", // Darker text for readability
+  },
+
+  input: {
+    backgroundColor: "#f8fafc", // Light grey background for input
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    borderRadius: 12, // Rounded corners like the screenshot
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: "#334155",
+  },
+  helperText: {
+    fontSize: 12,
+    color: "#94a3b8",
+    marginTop: -8,
+    marginBottom: 15,
+    marginLeft: 4,
   },
   textArea: {
     height: 90,
@@ -272,6 +285,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 8,
   },
+  profileButtons: {
+    flexDirection: "row", 
+    marginLeft: 16,
+    gap: 12,
+  },
+
   outlineBtnLarge: {
     borderWidth: 1,
     borderColor: "#2563eb",

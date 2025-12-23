@@ -47,198 +47,169 @@ const SettingsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* 🔹 Header */}
+  <SafeAreaView style={styles.safe}>
+    <ScrollView contentContainerStyle={styles.container}>
+
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backText}>← Back</Text>
+          <Ionicons name="arrow-back" size={24} color="#2563eb" />
         </TouchableOpacity>
-        <Text style={styles.titleText}>Change Password</Text>
+        <Text style={styles.headerTitle}>Change Password</Text>
       </View>
 
-      {/* 🔹 Tabs */}
-      <View style={styles.tabWrapper}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {tabs.map((tab, index) => (
-            <TouchableOpacity key={index} style={[styles.tabItem, styles.activeTab]}>
-              <Text style={styles.tabLabel}>{tab}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+      {/* Card */}
+      <View style={styles.card}>
+        <Text style={styles.cardHeaderText}>Change Password</Text>
 
-      {/* 🔹 Change Password Card */}
-      <View style={styles.content}>
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardHeaderText}>Change Password</Text>
-          </View>
-
-          <View style={styles.cardBody}>
-            {/* Old Password */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your old password"
-                secureTextEntry={!showOld}
-                value={passwords.old}
-                onChangeText={(val) =>
-                  setPasswords({ ...passwords, old: val })
-                }
-              />
-              <TouchableOpacity onPress={() => setShowOld(!showOld)}>
-                <Ionicons
-                  name={showOld ? "eye-off-outline" : "eye-outline"}
-                  size={18}
-                  color="#999"
-                />
-              </TouchableOpacity>
-            </View>
-
-            {/* New Password */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your new password"
-                secureTextEntry={!showNew}
-                value={passwords.new}
-                onChangeText={(val) =>
-                  setPasswords({ ...passwords, new: val })
-                }
-              />
-              <TouchableOpacity onPress={() => setShowNew(!showNew)}>
-                <Ionicons
-                  name={showNew ? "eye-off-outline" : "eye-outline"}
-                  size={18}
-                  color="#999"
-                />
-              </TouchableOpacity>
-            </View>
-
-            {/* Confirm Password */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter confirm password"
-                secureTextEntry={!showConfirm}
-                value={passwords.confirm}
-                onChangeText={(val) =>
-                  setPasswords({ ...passwords, confirm: val })
-                }
-              />
-              <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
-                <Ionicons
-                  name={showConfirm ? "eye-off-outline" : "eye-outline"}
-                  size={18}
-                  color="#999"
-                />
-              </TouchableOpacity>
-            </View>
-
-            {/* Submit */}
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
-              <Text style={styles.submitBtnText}>Submit</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Old Password */}
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Old password"
+            secureTextEntry={!showOld}
+            value={passwords.old}
+            onChangeText={(val) =>
+              setPasswords({ ...passwords, old: val })
+            }
+          />
+          <TouchableOpacity onPress={() => setShowOld(!showOld)}>
+            <Ionicons
+              name={showOld ? "eye-off-outline" : "eye-outline"}
+              size={20}
+              color="#9CA3AF"
+            />
+          </TouchableOpacity>
         </View>
+
+        {/* New Password */}
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="New password"
+            secureTextEntry={!showNew}
+            value={passwords.new}
+            onChangeText={(val) =>
+              setPasswords({ ...passwords, new: val })
+            }
+          />
+          <TouchableOpacity onPress={() => setShowNew(!showNew)}>
+            <Ionicons
+              name={showNew ? "eye-off-outline" : "eye-outline"}
+              size={20}
+              color="#9CA3AF"
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Confirm Password */}
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm password"
+            secureTextEntry={!showConfirm}
+            value={passwords.confirm}
+            onChangeText={(val) =>
+              setPasswords({ ...passwords, confirm: val })
+            }
+          />
+          <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
+            <Ionicons
+              name={showConfirm ? "eye-off-outline" : "eye-outline"}
+              size={20}
+              color="#9CA3AF"
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Submit */}
+        <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+          <Text style={styles.submitBtnText}>Update Password</Text>
+        </TouchableOpacity>
+
       </View>
-    </SafeAreaView>
-  );
+    </ScrollView>
+  </SafeAreaView>
+);
 };
 
 export default SettingsScreen;
 
 /* 🔹 Styles */
 const styles = StyleSheet.create({
-  container: {
+  safe: {
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  container: {
+    paddingBottom: 30,
+  },
+
+  /* Header */
   header: {
-    padding: 20,
-  },
-  backText: {
-    color: '#0091D5',
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  titleText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#0091D5',
-  },
-  tabWrapper: {
-    borderWidth: 1,
-    borderColor: '#B2E3FF',
-    marginHorizontal: 20,
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 40,
-  },
-  tabItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#0091D5',
-    marginRight: 10,
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
-  activeTab: {
-    backgroundColor: '#B2E3FF',
-  },
-  tabLabel: {
-    fontSize: 12,
-    color: '#333',
-  },
-  content: {
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 450,
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    elevation: 6,
-    overflow: 'hidden',
-  },
-  cardHeader: {
-    backgroundColor: '#B2E3FF',
-    padding: 12,
-  },
-  cardHeaderText: {
-    color: '#0091D5',
+  headerTitle: {
+    fontSize: 18,
     fontWeight: '600',
+    marginLeft: 12,
+    color: '#111827',
+  },
+
+  /* Card */
+  card: {
+    marginHorizontal: 16,
+    marginTop: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 18,
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+  cardHeaderText: {
     fontSize: 16,
+    fontWeight: '600',
+    color: '#2563EB',
+    marginBottom: 16,
   },
-  cardBody: {
-    padding: 25,
-  },
+
+  /* Inputs */
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 8,
-    marginBottom: 15,
-    paddingHorizontal: 10,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    marginBottom: 14,
+    height: 48,
   },
   input: {
     flex: 1,
-    paddingVertical: 12,
     fontSize: 14,
+    color: '#111827',
   },
+
+  /* Button */
   submitBtn: {
-    backgroundColor: '#0091D5',
-    paddingVertical: 14,
-    borderRadius: 30,
-    marginTop: 10,
+    backgroundColor: '#2563EB',
+    height: 48,
+    borderRadius: 24,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
   },
   submitBtnText: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
