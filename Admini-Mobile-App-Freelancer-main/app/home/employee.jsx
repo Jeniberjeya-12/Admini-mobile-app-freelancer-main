@@ -1,110 +1,226 @@
-import React, { useState } from 'react';
-import { 
-  View, Text, StyleSheet, TouchableOpacity, 
-  Modal, TextInput, ScrollView, FlatList 
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, Modal} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function SettingsScreen() {
-  const [activeTab, setActiveTab] = useState("Employee");
+export default function UsersScreen() {
+  const router = useRouter();
+  const [search, setSearch] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [employees, setEmployees] = useState([]);
-  
-  // Form State
-  const [name, setName] = useState('');
-  const [employeeId, setEmployeeId] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [role, setRole] = useState('');
 
+  const [employees, setEmployees] = useState([
+    {
+      id: "1",
+      name: "Surya",
+      email: "surya.ventures0@gmail.com",
+      role: "Non Technical",
+      skill: "Market Research & Content Creation",
+      status: "active",
+    },
+    {
+      id: "2",
+      name: "Aruna",
+      email: "aruna.dexa@gmail.com",
+      role: "Technical",
+      skill: "Tech Lead",
+      status: "active",
+    },
+    {
+      id: "3",
+      name: "Anton Richards",
+      email: "richards.dexa@gmail.com",
+      role: "Non Technical",
+      skill: "Operations Manager",
+      status: "active",
+    },
+    {
+      id: "4",
+      name: "Tamil Selvi",
+      email: "tamilselvi2015n@gmail.com",
+      role: "Non-Technical",
+      skill: "Marketing Research & Content Creation",
+      status: "active",
+    },
+    {
+      id: "5",
+      name: "Amala",
+      email: "amalajerome3@gmail.com",
+      role: "Technical",
+      skill: "Python Developer",
+      status: "active",
+    },
+    {
+      id: "6",
+      name: "Cruz Stani Thanis",
+      email: "stanithanis@gmail.com",
+      role: "Non-Technical",
+      skill: "Marketing Research & Content Creation",
+      status: "active",
+    },
+    {
+      id: "7",
+      name: "Tharik",
+      email: "mohammedtharik165@gmail.com",
+      role: "Non-Technical",
+      skill: "UI/UX Designer",
+      status: "active",
+    },
+  ]);
+
+  /* 🔹 Add Employee Form State */
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [skill, setSkill] = useState("");
+
+  /* 🔹 Search Filter */
+  const filteredEmployees = employees.filter(
+    (item) =>
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      item.email.toLowerCase().includes(search.toLowerCase())
+  );
+
+  /* 🔹 Add Employee */
   const handleAddEmployee = () => {
-    const newEmployee = { id: Date.now().toString(), name, employeeId, phoneNumber, role };
+    if (!name || !email) return;
+
+    const newEmployee = {
+      id: Date.now().toString(),
+      name,
+      email,
+      role,
+      skill,
+      status: "active",
+    };
+
     setEmployees([...employees, newEmployee]);
-    
-    // Reset and Close
-    setName(''); setEmployeeId(''); setPhoneNumber(''); setRole('');
+
+    setName("");
+    setEmail("");
+    setRole("");
+    setSkill("");
     setIsModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}>
-                <Ionicons name="arrow-back" size={22} color="#2563eb" />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Employee List</Text>
-        </View>
-      </View>
-
-      {/* Tabs */}
-      <View style={styles.tabsContainer}>
-        {[].map((tab) => (
-          <TouchableOpacity 
-            key={tab} 
-            onPress={() => setActiveTab(tab)}
-            style={[styles.tab, activeTab === tab && styles.activeTab]}
-          >
-            <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>{tab}</Text>
+      <View style={styles.topHeader}>
+         <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={22} color="#ffffffff" />
           </TouchableOpacity>
-        ))}
+        <Text style={styles.headerTitle}>Employee List</Text>
+        <View style={{ width: 22 }} />
       </View>
 
-      {/* Employee List Content */}
-      {activeTab === "Employee" && (
-        <View style={{ flex: 1, padding: 20 }}>
-          <View style={styles.row}>
-            <Text>Total Number of Employees: {employees.length}</Text>
-            <TouchableOpacity 
-              style={styles.addButton} 
-              onPress={() => setIsModalVisible(true)}
-            >
-              <Text style={{ color: '#fff' }}>+ Add Employee</Text>
-            </TouchableOpacity>
-          </View>
+      {/* Search */}
+      <View style={styles.searchBox}>
+        <Ionicons name="search" size={18} color="#9ca3af" />
+        <TextInput
+          placeholder="Search users..."
+          style={styles.searchInput}
+          value={search}
+          onChangeText={setSearch}
+        />
+      </View>
 
-          {employees.length === 0 ? (
-            <Text style={styles.emptyText}>No employees found. Add your first employee.</Text>
-          ) : (
-            <FlatList
-              data={employees}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <View style={styles.employeeCard}>
-                  <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
-                  <Text>{item.role} | ID: {item.employeeId}</Text>
+      {/* Employees Row */}
+      <View style={styles.employeeRow}>
+        <Text style={styles.employeeTitle}>
+          Employees ({filteredEmployees.length})
+        </Text>
+
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={() => setIsModalVisible(true)}
+        >
+          <Ionicons name="add" size={18} color="#fff" />
+          <Text style={styles.addBtnText}>Add</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Employee List */}
+      <FlatList
+        data={filteredEmployees}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {item.name.charAt(0)}
+              </Text>
+            </View>
+
+            <View style={styles.cardContent}>
+              <Text style={styles.name}>{item.name}</Text>
+              <Text style={styles.email}>{item.email}</Text>
+
+              <View style={styles.badgeRow}>
+                <View style={styles.badgeGray}>
+                  <Text style={styles.badgeText}>{item.role}</Text>
                 </View>
-              )}
-            />
-          )}
-        </View>
-      )}
+                <View style={styles.badgeBlue}>
+                  <Text style={styles.badgeText}>{item.skill}</Text>
+                </View>
+              </View>
 
-      {/* Add Employee Modal */}
-      <Modal visible={isModalVisible} transparent animationType="slide">
+              <View style={styles.badgeGreen}>
+                <Text style={styles.badgeText}>active</Text>
+              </View>
+            </View>
+
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color="#9ca3af"
+            />
+          </View>
+        )}
+      />
+
+      {/* 🔹 Add Employee Modal */}
+      <Modal transparent visible={isModalVisible} animationType="slide">
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View style={styles.modalCard}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Add Employee</Text>
               <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-                <Ionicons name="close-circle" size={24} color="white" />
+                <Ionicons name="close" size={22} color="#fff" />
               </TouchableOpacity>
             </View>
 
-            <View style={styles.form}>
-              <Text>Name</Text>
-              <TextInput style={styles.input} placeholder="Enter Name" onChangeText={setName} />
-              <Text>Employee Id</Text>
-              <TextInput style={styles.input} placeholder="Enter ID" onChangeText={setEmployeeId} />
-              <Text>Phone Number</Text>
-              <TextInput style={styles.input} placeholder="Enter Phone" keyboardType="phone-pad" onChangeText={setPhoneNumber} />
-              <Text>Role</Text>
-              <TextInput style={styles.input} placeholder="Enter Role" onChangeText={setRole} />
-              
-              <TouchableOpacity style={styles.submitButton} onPress={handleAddEmployee}>
-                <Text style={{ color: 'white' }}>Submit</Text>
-              </TouchableOpacity>
-            </View>
+            <TextInput
+              placeholder="Name"
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+            />
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+            />
+            <TextInput
+              placeholder="Role"
+              style={styles.input}
+              value={role}
+              onChangeText={setRole}
+            />
+            <TextInput
+              placeholder="Skill"
+              style={styles.input}
+              value={skill}
+              onChangeText={setSkill}
+            />
+
+            <TouchableOpacity
+              style={styles.submitBtn}
+              onPress={handleAddEmployee}
+            >
+              <Text style={styles.submitText}>Submit</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -113,61 +229,175 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1,
-    backgroundColor: '#fff' },
-  header: { flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15 },
-  headerTitle: { fontSize: 18,
-     fontWeight: 'bold',
-     marginLeft: 10 },
-  tabsContainer: { flexDirection: 'row', 
-    paddingHorizontal: 15, marginBottom: 10 },
-  tab: { paddingVertical: 8, 
-    paddingHorizontal: 15, 
-    borderRadius: 10, 
-    borderWidth: 1, 
-    borderColor: '#d1e3ff', 
-    marginRight: 10 },
-  activeTab: { backgroundColor: '#e0efff' },
-  tabText: { color: '#2563eb' },
-  activeTabText: { fontWeight: 'bold' },
-  row: { flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: 20 },
-  addButton: { backgroundColor: '#00a8e8', 
-    padding: 10, 
-    borderRadius: 5 },
-  emptyText: { textAlign: 'center', 
-    marginTop: 50, 
-    color: 'gray' },
-  employeeCard: { padding: 15, 
-    borderBottomWidth: 1, 
-    borderColor: '#eee' },
-  modalOverlay: { flex: 1, 
-    backgroundColor: 'rgba(0,0,0,0.5)', 
-    justifyContent: 'center', 
-    alignItems: 'center' },
-  modalContent: { width: '90%', 
-    backgroundColor: 'white', 
-    borderRadius: 10, 
-    overflow: 'hidden' },
-  modalHeader: { backgroundColor: '#00a8e8', 
-    padding: 15, 
-    flexDirection: 'row',
-    justifyContent: 'space-between' },
-  modalTitle: { color: 'white', 
-    fontWeight: 'bold' },
-  form: { padding: 20 },
-  input: { borderWidth: 1, 
-    borderColor: '#ddd', 
-    borderRadius: 5, 
-    padding: 10, 
-    marginVertical: 10 },
-  submitButton: { backgroundColor: '#00a8e8', 
-    padding: 15, 
-    borderRadius: 5, 
-    alignItems: 'center', 
-    marginTop: 10 }
+  container: {
+    flex: 1,
+    backgroundColor: "#f1f5f9",
+  },
+
+  topHeader: {
+    backgroundColor: "#0ea5e9",
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  headerTitle: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+
+  searchBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#e5e7eb",
+    margin: 16,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+  },
+  searchInput: {
+    flex: 1,
+    padding: 10,
+  },
+
+  employeeRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    marginBottom: 10,
+  },
+  employeeTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  addBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0ea5e9",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  addBtnText: {
+    color: "#fff",
+    marginLeft: 4,
+    fontWeight: "600",
+  },
+
+  card: {
+    backgroundColor: "#fff",
+    marginHorizontal: 16,
+    marginBottom: 12,
+    padding: 14,
+    borderRadius: 14,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#2563eb",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  avatarText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+
+  cardContent: {
+    flex: 1,
+  },
+  name: {
+    fontWeight: "600",
+    fontSize: 14,
+  },
+  email: {
+    color: "#6b7280",
+    fontSize: 12,
+    marginBottom: 6,
+  },
+
+  badgeRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  badgeGray: {
+    backgroundColor: "#e5e7eb",
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  badgeBlue: {
+    backgroundColor: "#dbeafe",
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginBottom: 6,
+  },
+  badgeGreen: {
+    backgroundColor: "#dcfce7",
+    alignSelf: "flex-start",
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+
+  badgeText: {
+    fontSize: 11,
+    color: "#111827",
+  },
+
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: "rgba(0,0,0,0.4)",
+  justifyContent: "center",
+  alignItems: "center",
+},
+modalCard: {
+  width: "90%",
+  backgroundColor: "#fff",
+  borderRadius: 16,
+  padding: 20,
+},
+modalHeader: {
+  backgroundColor: "#0ea5e9",
+  padding: 14,
+  borderRadius: 12,
+  flexDirection: "row",
+  justifyContent: "space-between",
+  marginBottom: 15,
+},
+modalTitle: {
+  color: "#fff",
+  fontWeight: "600",
+  fontSize: 16,
+},
+input: {
+  borderWidth: 1,
+  borderColor: "#e5e7eb",
+  borderRadius: 10,
+  padding: 12,
+  marginBottom: 12,
+},
+submitBtn: {
+  backgroundColor: "#0ea5e9",
+  paddingVertical: 14,
+  borderRadius: 10,
+  alignItems: "center",
+  marginTop: 10,
+},
+submitText: {
+  color: "#fff",
+  fontWeight: "600",
+},
+
 });
